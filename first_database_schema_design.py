@@ -17,6 +17,7 @@ class OffersFirstSearch(Base):
     seller_id = Column(String, nullable='True')
     title = Column(String, nullable='True')
     price = Column(Float, nullable='True')
+    url = Column(String, nullable='True')
 
 
 # Create 'offers' database schema
@@ -32,3 +33,4 @@ class OffersSecondSearch(Base):
     seller_id = Column(String, nullable='True')
     title = Column(String, nullable='True')
     price = Column(Float, nullable='True')
+    url = Column(String, nullable='True')

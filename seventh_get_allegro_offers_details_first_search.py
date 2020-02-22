@@ -94,9 +94,23 @@ def get_details(_data):
         offers_data_first_search['price'] = float(filtered.get('content'))
     except:
         filtered_price = selector.css('.sticky-sidebar > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > span:nth-child(2)::text').get()
-        filtered_cents = selector.css('.sticky-sidebar > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > span:nth-child(2) > span:nth-child(1)::text').get()
-        print("price: " + filtered_price+filtered_cents)
-        offers_data_first_search['price'] = filtered_price+filtered_cents
+        pattern = '\d^'
+        filtered_price_match = re.search(pattern, filtered_price)
+        if filtered_price_match:
+            start_position = filtered_price_match.start()
+            end_position = filtered_price_match.end()
+            filtered_price_digits_only = filtered_price[start_position:end_position]
+
+            filtered_cents = selector.css('.sticky-sidebar > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > span:nth-child(2) > span:nth-child(1)::text').get()
+            filtered_cents_match = re.search(pattern, filtered_cents)
+            if filtered_cents_match:
+                start_position = filtered_cents_match.start()
+                end_position = filtered_cents_match.end()
+                filtered_cents_digits_only = filtered_cents[start_position:end_position]
+
+                filtered_price_digits_only = float(filtered_price_digits_only+"."+filtered_cents_digits_only)
+                print("price: " + filtered_price_digits_only)
+                offers_data_first_search['price'] = filtered_price_digits_only
 
     # Search for url
     # filtered = selector.css('head > meta:nth-child(133)::attr(content)').get()
