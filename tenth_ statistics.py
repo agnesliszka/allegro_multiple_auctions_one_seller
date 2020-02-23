@@ -23,7 +23,7 @@ def run_query(query, db):
 QUERY_MAP = {
     'number_of_offers_firts_search': 'SELECT COUNT (*) FROM allegro_offers_first_search;',
     'number_of_offers_second_search': 'SELECT COUNT (*) FROM allegro_offers_second_search;',
-    'offers_links': 'SELECT * FROM allegro_offers_first_search INNER JOIN allegro_offers_second_search ON allegro_offers_first_search.seller_id = allegro_offers_second_search.seller_id ORDER_BY seller_id;',
+    'offers_links': 'SELECT DISTINCT allegro_offers_first_search.seller_id, allegro_offers_first_search.title, allegro_offers_first_search.url, allegro_offers_second_search.title, allegro_offers_second_search.url FROM allegro_offers_first_search INNER JOIN allegro_offers_second_search ON allegro_offers_first_search.seller_id = allegro_offers_second_search.seller_id;',
 }
 
 # Define a database path
@@ -43,7 +43,7 @@ def offers_data():
     offers_links = run_query(QUERY_MAP['offers_links'], path_to_db)
     print('offers links: ')
     for link in offers_links:
-        print(link[0])
+        print(link)
 
 
 # Create a menu representing available options
