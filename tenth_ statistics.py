@@ -6,7 +6,7 @@ import sqlite3
 from sqlalchemy.sql import func
 
 # Project imports
-from first_database_schema_design import Offer
+from first_database_schema_design import OffersFirstSearch, OffersSecondSearch
 from second_db_engine import Session
 
 
@@ -21,20 +21,23 @@ def run_query(query, db):
 
 # Define a query map
 QUERY_MAP = {
-    'number_of_offers': 'SELECT COUNT (*) FROM allegro_offers;',
-    'offers_links': 'SELECT url FROM allegro_offers GROUP_BY seller_id ORDER_BY title;',
+    'number_of_offers_firts_search': 'SELECT COUNT (*) FROM allegro_offers_first_search;',
+    'number_of_offers_second_search': 'SELECT COUNT (*) FROM allegro_offers_second_search;',
+    'offers_links': 'SELECT * FROM allegro_offers_first_search INNER JOIN allegro_offers_second_search ON allegro_offers_first_search.seller_id = allegro_offers_second_search.seller_id ORDER_BY seller_id;',
 }
 
 # Define a database path
 dirname = os.path.dirname(__file__)
-db_name = 'offers.db'
+db_name = 'allegro_offers.db'
 path_to_db = os.path.join(dirname, db_name)
 
 # Function to get general statistics - number of offers
 def general_statistics():
     # Get numbers of offers from the database
-    number_of_offers = run_query(QUERY_MAP['number_of_offers'], path_to_db)
-    print('Number of offers in the database: ' + str(number_of_offers))
+    number_of_offers_first_search = run_query(QUERY_MAP['number_of_offers_firts_search'], path_to_db)
+    print('Number of offers in the first search in the database: ' + str(number_of_offers_first_search))
+    number_of_offers_second_search = run_query(QUERY_MAP['number_of_offers_second_search'], path_to_db)
+    print('Number of offers in the second search in the database: ' + str(number_of_offers_second_search))
 
 def offers_data():
     offers_links = run_query(QUERY_MAP['offers_links'], path_to_db)
@@ -51,7 +54,7 @@ def menu():
         Please input one of the following options:         
         1 - show statistics,
         2 - show offers links grouped by seller
-        2 - quit  
+        3 - quit  
         ''')
 
         if user_choice == "1":
